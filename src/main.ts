@@ -10,7 +10,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Nest Crash Course')
-    .setDescription('Youtube lesson from Marius Espejo')
+    .setDescription('Youtube lesson from Marius Youtuber')
     .setVersion('0.1.0')
     .build();
 

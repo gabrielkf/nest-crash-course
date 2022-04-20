@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './users.entity';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -28,13 +28,13 @@ export class UsersController {
   @ApiOkResponse({ type: User, isArray: true, description: 'In memory users' })
   @ApiQuery({ name: 'name', required: false })
   @Get()
-  getUsers(@Query('name') name: string): User[] {
+  getUsers(@Query('name') name: string): Promise<User[]> {
     return this.usersService.findAll(name);
   }
 
+  @Get(':id')
   @ApiOkResponse({ type: User })
   @ApiNotFoundResponse({ description: 'No user with provided id' })
-  @Get(':id')
   getUserById(@Param('id', ParseIntPipe) id: number): User {
     const userById = this.usersService.findById(id);
 
@@ -45,9 +45,9 @@ export class UsersController {
     return userById;
   }
 
+  @Post()
   @ApiCreatedResponse({ type: User })
   @ApiBadRequestResponse({ description: 'Name field is required' })
-  @Post()
   createUser(@Body() body: CreateUserDto): User {
     return this.usersService.createUser(body);
   }

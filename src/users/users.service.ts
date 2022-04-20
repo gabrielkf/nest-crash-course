@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './users.entity';
 
 const SAMPLE_USERS = [
   {
@@ -31,14 +33,18 @@ const SAMPLE_USERS = [
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
+
   private users: User[] = [...SAMPLE_USERS];
 
-  findAll(name?: string): User[] {
+  findAll(name?: string): Promise<User[]> {
     return !name
-      ? this.users
-      : this.users.filter((user) => {
-          const nameRegex = new RegExp(name, 'i');
-          return nameRegex.test(user.name);
+      ? this.usersRepository.find()
+      : this.usersRepository.find({
+          relations: ['*'],
+          where: { name },
         });
   }
 

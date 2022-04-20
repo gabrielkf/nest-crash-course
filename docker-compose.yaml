@@ -4,9 +4,10 @@ services:
   db:
     container_name: nestPg
     build:
-      context: src/database
-      dockerfile: pg.dockerfile
+      context: ./
+      dockerfile: dockerfile.pg
     volumes:
       - ./dbVolume:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    tty: true
