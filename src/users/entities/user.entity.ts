@@ -10,4 +10,8 @@ export class User {
   @Column()
   @ApiProperty()
   name: string;
+
+  @Column()
+  @ApiProperty()
+  email: string;
 }

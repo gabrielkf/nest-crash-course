@@ -1,11 +1,9 @@
-// import { User } from './users/users.entity';
 import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
+import { AppConstants } from './app.constants';
 
 @Injectable()
 export class AppService {
   getHello(): string {
-    return `Server is working!`;
+    return AppConstants.HealthCheck.Message;
   }
 }
