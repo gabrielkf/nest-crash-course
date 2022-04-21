@@ -4,7 +4,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   Query,
 } from '@nestjs/common';
@@ -35,7 +34,7 @@ export class UsersController {
   @Get(':id')
   @ApiOkResponse({ type: User })
   @ApiNotFoundResponse({ description: 'No user with provided id' })
-  getUserById(@Param('id', ParseIntPipe) id: number): User {
+  getUserById(@Param('id') id: string): Promise<User> {
     const userById = this.usersService.findById(id);
 
     if (!userById) {
@@ -48,7 +47,7 @@ export class UsersController {
   @Post()
   @ApiCreatedResponse({ type: User })
   @ApiBadRequestResponse({ description: 'Name field is required' })
-  createUser(@Body() body: CreateUserDto): User {
+  createUser(@Body() body: CreateUserDto): Promise<User> {
     return this.usersService.createUser(body);
   }
 }

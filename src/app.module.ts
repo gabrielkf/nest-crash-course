@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 // import { TodosModule } from './todos/todos.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import pgConfig from 'ormconfig';
+import pgConfig from '../ormconfig';
 
 @Module({
   imports: [TypeOrmModule.forRoot(pgConfig), UsersModule],

@@ -1,5 +1,4 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-// import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
 const pgConfig: PostgresConnectionOptions = {
   type: 'postgres',
@@ -10,15 +9,7 @@ const pgConfig: PostgresConnectionOptions = {
   database: 'ingredients',
   entities: ['dist/src/**/*.entity{.ts,.js}'],
   synchronize: true,
+  uuidExtension: 'pgcrypto',
 };
-
-// const sqliteConfig: SqliteConnectionOptions = {
-//   type: 'sqlite',
-//   database: 'ingredients',
-//   // username: 'nest',
-//   // password: 'nest',
-//   entities: ['dist/src/**/*.entity{.ts,.js}'],
-//   synchronize: true,
-// };
 
 export default pgConfig;

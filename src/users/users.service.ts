@@ -4,40 +4,11 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 
-const SAMPLE_USERS = [
-  {
-    id: 1649300345000,
-    name: 'Mario Bros',
-  },
-  {
-    id: 1649300345330,
-    name: 'Bruna Venus',
-  },
-  {
-    id: 1649300712410,
-    name: 'John Travolta',
-  },
-  {
-    id: 1649300720779,
-    name: 'Abigail Travolta',
-  },
-  {
-    id: 1649300739599,
-    name: 'Arnold Bros',
-  },
-  {
-    id: 1649300739999,
-    name: 'Arnold Schwarzenegger',
-  },
-];
-
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
-
-  private users: User[] = [...SAMPLE_USERS];
 
   findAll(name?: string): Promise<User[]> {
     return !name
@@ -48,15 +19,17 @@ export class UsersService {
         });
   }
 
-  findById(userId: number): User {
-    return this.users.find((user) => user.id === userId);
+  async findById(userId: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id: userId });
+
+    return user;
   }
 
-  createUser(createUserDto: CreateUserDto): User {
-    const newUser = { id: Date.now(), ...createUserDto };
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = await this.usersRepository.create({ ...createUserDto });
 
-    this.users.push(newUser);
+    const savedUser = await this.usersRepository.save(newUser);
 
-    return newUser;
+    return savedUser;
   }
 }
