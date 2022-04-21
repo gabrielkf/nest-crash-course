@@ -25,7 +25,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  @ApiOkResponse({ type: User, isArray: true, description: 'In memory users' })
+  @ApiOkResponse({ type: User, isArray: true, description: 'Users' })
   @ApiQuery({ name: 'name', required: false })
   getUsers(@Query('name') name: string): Promise<User[]> {
     return this.usersService.findAll(name);
@@ -46,7 +46,7 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: User })
-  @ApiBadRequestResponse({ description: 'Name field is required' })
+  @ApiBadRequestResponse()
   createUser(@Body() body: CreateUserDto): Promise<User> {
     return this.usersService.createUser(body);
   }

@@ -9,7 +9,8 @@ const pgConfig: PostgresConnectionOptions = {
   database: 'ingredients',
   entities: ['dist/src/**/*.entity{.ts,.js}'],
   synchronize: true,
-  uuidExtension: 'pgcrypto',
+  uuidExtension: 'uuid-ossp',
+  installExtensions: true,
 };
 
 export default pgConfig;
