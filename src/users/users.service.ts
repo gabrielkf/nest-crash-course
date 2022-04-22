@@ -1,8 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+
+const EMPTY_FIELDS_MESSAGE = 'No fields were given to update';
 
 @Injectable()
 export class UsersService {
@@ -19,8 +27,10 @@ export class UsersService {
         });
   }
 
-  async findById(userId: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id: userId });
+  async findByIdAsync(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) throw new NotFoundException();
 
     return user;
   }
@@ -31,5 +41,32 @@ export class UsersService {
     });
 
     return this.usersRepository.save(newUser);
+  }
+
+  async updateUserAsync(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) throw new NotFoundException();
+
+    const changingKeys = Object.keys(updateUserDto);
+
+    if (!changingKeys.length) {
+      throw new HttpException(EMPTY_FIELDS_MESSAGE, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    changingKeys.forEach((key) => (user[key] = updateUserDto[key]));
+
+    return await this.usersRepository.save(user);
+  }
+
+  async deleteUserAsync(id: string): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) throw new NotFoundException();
+
+    this.usersRepository.remove(user);
   }
 }
